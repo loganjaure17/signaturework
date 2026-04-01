@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portrayal of Politics in Media</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:       #090c12;
+      --surface:  #111520;
+      --border:   #1e2535;
+      --gold:     #5b8ee6;
+      --gold-dim: #2e4f8a;
+      --red:      #c94040;
+      --red-dim:  #7a2020;
+      --left:     #4a90d9;
+      --center:   #7ec8a0;
+      --right:    #e05c5c;
+      --text:     #d4ddf0;
+      --muted:    #5a6480;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── HEADER ── */
+    header {
+      width: 100%;
+      padding: 3rem 2rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, #111 0%, var(--bg) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse at 20% -10%, rgba(91,142,230,0.13) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% -10%, rgba(201,64,64,0.11) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .quote-block {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      background: linear-gradient(90deg, var(--gold), var(--red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.04em;
+      margin-bottom: 1.2rem;
+      opacity: 0.9;
+    }
+
+    .quote-block span {
+      display: block;
+      font-style: normal;
+      font-size: 0.75rem;
+      color: var(--gold-dim);
+      margin-top: 0.3rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.6rem, 5vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 0.8rem;
+    }
+
+    .subtitle {
+      font-size: clamp(0.8rem, 2vw, 0.92rem);
+      color: var(--muted);
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── MAIN ── */
+    main {
+      width: 100%;
+      max-width: 760px;
+      padding: 2.5rem 1.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* ── API KEY SECTION ── */
+    .api-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem 1.4rem;
+    }
+
+    .api-section label {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .api-section .api-note {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-bottom: 0.7rem;
+      line-height: 1.5;
+    }
+
+    .api-section input {
+      width: 100%;
+      background: #1e1e1e;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 0.65rem 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .api-section input:focus { border-color: var(--gold-dim); }
+
+    /* ── INPUT AREA ── */
+    .input-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.6rem;
+    }
+
+    .input-card label {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .input-row input {
+      flex: 1;
+      background: #1e1e1e;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 0.75rem 1rem;
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.88rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-row input:focus { border-color: var(--gold-dim); }
+    .input-row input::placeholder { color: var(--muted); }
+
+    button#analyzeBtn {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--red) 100%);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 0.75rem 1.4rem;
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    button#analyzeBtn:hover { opacity: 0.88; }
+    button#analyzeBtn:active { transform: scale(0.98); }
+    button#analyzeBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── STATUS ── */
+    #status {
+      font-size: 0.82rem;
+      color: var(--gold);
+      text-align: center;
+      min-height: 1.2rem;
+      letter-spacing: 0.05em;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border: 2px solid var(--gold-dim);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── RESULTS ── */
+    #results { display: none; flex-direction: column; gap: 1.5rem; }
+    #results.visible { display: flex; animation: fadeUp 0.5s ease; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 0.5rem;
+    }
+
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid transparent;
+      border-image: linear-gradient(180deg, var(--gold), var(--red)) 1;
+      border-radius: 6px;
+      padding: 1.4rem 1.6rem;
+    }
+
+    .summary-card .main-idea {
+      font-size: 0.95rem;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .core-issue-badge {
+      display: inline-block;
+      background: rgba(201,64,64,0.08);
+      border: 1px solid var(--red-dim);
+      border-radius: 20px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.78rem;
+      color: #d97070;
+      letter-spacing: 0.06em;
+    }
+
+    .perspectives-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 600px) {
+      .perspectives-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .perspective-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      transition: transform 0.2s;
+    }
+
+    .perspective-card:hover { transform: translateY(-2px); }
+
+    .perspective-card.left  { border-top: 3px solid var(--left); }
+    .perspective-card.center{ border-top: 3px solid var(--center); }
+    .perspective-card.right { border-top: 3px solid var(--right); }
+
+    .perspective-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .left  .perspective-tag { color: var(--left); }
+    .center .perspective-tag { color: var(--center); }
+    .right .perspective-tag { color: var(--right); }
+
+    .perspective-outlet {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .perspective-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      color: var(--text);
+    }
+
+    .perspective-summary {
+      font-size: 0.8rem;
+      line-height: 1.65;
+      color: #8090b0;
+    }
+
+    .perspective-link a {
+      font-size: 0.75rem;
+      color: var(--gold-dim);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .perspective-link a:hover {
+      color: var(--gold);
+      border-bottom-color: var(--gold-dim);
+    }
+
+    /* ── ERROR ── */
+    .error-card {
+      background: rgba(224,92,92,0.08);
+      border: 1px solid rgba(224,92,92,0.3);
+      border-radius: 6px;
+      padding: 1rem 1.4rem;
+      font-size: 0.85rem;
+      color: #e09090;
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: auto;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      width: 100%;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="quote-block">
+    "We are only as strong as we are united, as weak as we are divided."
+    <span>— Albus Dumbledore</span>
+  </div>
+  <h1>Portrayal of Politics in Media</h1>
+  <div style="display:flex;justify-content:center;margin:0.7rem auto 0.9rem;width:clamp(120px,40%,300px);height:3px;border-radius:2px;overflow:hidden;">
+    <div style="flex:1;background:var(--gold);"></div>
+    <div style="flex:1;background:var(--red);"></div>
+  </div>
+  <p class="subtitle">
+    A tool that encourages you to engage with differing opinions, challenge your beliefs,
+    and find common ground across the political spectrum.
+  </p>
+</header>
+
+<main>
+
+  <!-- API Key -->
+  <div class="api-section">
+    <label>Anthropic API Key</label>
+    <p class="api-note">
+      Your key is used only in your browser and never stored or sent anywhere except directly to Anthropic's API.
+      Get a key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--gold-dim)">console.anthropic.com</a>.
+    </p>
+    <input type="password" id="apiKey" placeholder="sk-ant-..." />
+  </div>
+
+  <!-- URL Input -->
+  <div class="input-card">
+    <label>News Article URL</label>
+    <div class="input-row">
+      <input type="url" id="newsUrl" placeholder="https://www.example.com/article..." />
+      <button id="analyzeBtn" onclick="analyze()">Analyze</button>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div id="status"></div>
+
+  <!-- Results -->
+  <div id="results">
+    <div class="summary-card" id="summaryCard">
+      <div class="section-label">Summary</div>
+      <div class="main-idea" id="mainIdea"></div>
+      <div class="core-issue-badge" id="coreIssue"></div>
+    </div>
+
+    <div>
+      <div class="section-label" style="margin-bottom:0.8rem">Comparative Coverage Across the Spectrum</div>
+      <div class="perspectives-grid">
+        <div class="perspective-card left"  id="cardLeft"></div>
+        <div class="perspective-card center" id="cardCenter"></div>
+        <div class="perspective-card right" id="cardRight"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>Signature Work Project · Portrayal of Politics in Media &nbsp;|&nbsp; Created by <strong style="color:var(--text)">Logan Jaure</strong></footer>
+
+<script>
+async function analyze() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const url    = document.getElementById('newsUrl').value.trim();
+  const btn    = document.getElementById('analyzeBtn');
+  const status = document.getElementById('status');
+  const results= document.getElementById('results');
+
+  // Validation
+  if (!apiKey) { setStatus('⚠ Please enter your Anthropic API key above.', true); return; }
+  if (!url)    { setStatus('⚠ Please enter a news article URL.', true); return; }
+
+  // Reset UI
+  results.classList.remove('visible');
+  btn.disabled = true;
+  setStatus('<span class="spinner"></span>Fetching and analyzing article…');
+
+  try {
+    // Step 1: Fetch article via allorigins proxy (bypasses CORS)
+    let articleText = '';
+    try {
+      const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+      const r = await fetch(proxy);
+      const d = await r.json();
+      // Strip HTML tags to get plain text
+      const tmp = document.createElement('div');
+      tmp.innerHTML = d.contents;
+      // Remove scripts/styles
+      tmp.querySelectorAll('script,style,nav,header,footer,aside').forEach(el => el.remove());
+      articleText = (tmp.innerText || tmp.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 12000);
+    } catch(e) {
+      articleText = `[Could not fetch article content from URL: ${url}]`;
+    }
+
+    setStatus('<span class="spinner"></span>Sending to Claude for analysis…');
+
+    // Step 2: Call Claude API
+    const prompt = `You are an objective media analyst. Analyze this news article and the topic it covers.
+
+ARTICLE URL: ${url}
+
+ARTICLE CONTENT (may be partial):
+${articleText}
+
+Your tasks:
+
+1. Summarize the main idea in 2–3 sentences.
+2. Identify the core issue in one short phrase (5 words or fewer).
+3. Find or suggest 3 real news articles on the SAME issue:
+   - One from a LEFT-leaning outlet (e.g. The Guardian, MSNBC, Vox, HuffPost)
+   - One from a CENTER/neutral outlet (e.g. AP News, Reuters, BBC, NPR)
+   - One from a RIGHT-leaning outlet (e.g. Fox News, NY Post, Breitbart, Daily Wire)
+
+4. For each provide: headline, outlet name, a plausible URL, and a 1–2 sentence framing comparison.
+
+Respond ONLY with valid JSON in this exact structure, no markdown fences, no extra text:
+{
+  "mainIdea": "...",
+  "coreIssue": "...",
+  "perspectives": {
+    "left":   { "headline": "...", "outlet": "...", "link": "...", "summary": "..." },
+    "center": { "headline": "...", "outlet": "...", "link": "...", "summary": "..." },
+    "right":  { "headline": "...", "outlet": "...", "link": "...", "summary": "..." }
+  }
+}`;
+
+    const apiResp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!apiResp.ok) {
+      const err = await apiResp.json().catch(() => ({}));
+      throw new Error(err.error?.message || `API error ${apiResp.status}`);
+    }
+
+    const apiData = await apiResp.json();
+    const rawText = apiData.content.map(b => b.text || '').join('');
+
+    // Parse JSON (strip any accidental fences)
+    const clean = rawText.replace(/```json|```/g, '').trim();
+    const data  = JSON.parse(clean);
+
+    // Step 3: Render
+    document.getElementById('mainIdea').textContent  = data.mainIdea  || '';
+    document.getElementById('coreIssue').textContent = 'Core Issue: ' + (data.coreIssue || '');
+
+    renderCard('cardLeft',   data.perspectives.left,   'LEFT');
+    renderCard('cardCenter', data.perspectives.center, 'CENTER');
+    renderCard('cardRight',  data.perspectives.right,  'RIGHT');
+
+    results.classList.add('visible');
+    setStatus('');
+
+  } catch(err) {
+    results.innerHTML = `<div class="error-card">⚠ ${err.message}</div>`;
+    results.classList.add('visible');
+    setStatus('');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderCard(id, p, label) {
+  const el = document.getElementById(id);
+  if (!p) { el.innerHTML = '<p style="color:var(--muted);font-size:0.8rem">No data available.</p>'; return; }
+  el.innerHTML = `
+    <div class="perspective-tag">${label}</div>
+    <div class="perspective-outlet">${escHtml(p.outlet || '')}</div>
+    <div class="perspective-headline">${escHtml(p.headline || '')}</div>
+    <div class="perspective-summary">${escHtml(p.summary || '')}</div>
+    <div class="perspective-link">
+      ${p.link ? `<a href="${escHtml(p.link)}" target="_blank" rel="noopener">Read article →</a>` : ''}
+    </div>
+  `;
+}
+
+function setStatus(msg, isError) {
+  const el = document.getElementById('status');
+  el.innerHTML  = msg;
+  el.style.color = isError ? '#e09090' : 'var(--gold)';
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Allow Enter key on URL field
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('newsUrl').addEventListener('keydown', e => {
+    if (e.key === 'Enter') analyze();
+  });
+});
+</script>
+</body>
+</html>
