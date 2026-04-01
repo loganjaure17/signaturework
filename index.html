@@ -515,13 +515,28 @@ Respond ONLY with valid JSON in this exact structure, no markdown fences, no ext
     const apiData = await apiResp.json();
     const rawText = apiData.content.map(b => b.text || '').join('');
 
-    // Parse JSON (strip any accidental fences)
-    const clean = rawText.replace(/```json|```/g, '').trim();
-    const data  = JSON.parse(clean);
+    // Robustly extract JSON — handle fences, leading/trailing text
+    let data;
+    try {
+      // Strip markdown fences and any text before/after the JSON object
+      const fenceStripped = rawText.replace(/```json|```/gi, '').trim();
+      const jsonMatch = fenceStripped.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error('No JSON object found in response.');
+      data = JSON.parse(jsonMatch[0]);
+    } catch(parseErr) {
+      throw new Error('Could not parse the analysis response. Please try again. (Detail: ' + parseErr.message + ')');
+    }
 
-    // Step 3: Render
-    document.getElementById('mainIdea').textContent  = data.mainIdea  || '';
-    document.getElementById('coreIssue').textContent = 'Core Issue: ' + (data.coreIssue || '');
+    // Validate expected fields exist
+    if (!data.mainIdea || !data.coreIssue || !data.perspectives) {
+      throw new Error('Response was missing expected fields. Please try again.');
+    }
+
+    // Step 3: Render — null-check each element before writing
+    const mainIdeaEl  = document.getElementById('mainIdea');
+    const coreIssueEl = document.getElementById('coreIssue');
+    if (mainIdeaEl)  mainIdeaEl.textContent  = data.mainIdea || '';
+    if (coreIssueEl) coreIssueEl.textContent = 'Core Issue: ' + (data.coreIssue || '');
 
     renderCard('cardLeft',   data.perspectives.left,   'LEFT');
     renderCard('cardCenter', data.perspectives.center, 'CENTER');
@@ -531,7 +546,12 @@ Respond ONLY with valid JSON in this exact structure, no markdown fences, no ext
     setStatus('');
 
   } catch(err) {
-    results.innerHTML = `<div class="error-card">⚠ ${err.message}</div>`;
+    // Show error inside results area without clobbering the card elements
+    const errDiv = document.createElement('div');
+    errDiv.className = 'error-card';
+    errDiv.textContent = '⚠ ' + err.message;
+    results.innerHTML = '';
+    results.appendChild(errDiv);
     results.classList.add('visible');
     setStatus('');
   } finally {
@@ -541,6 +561,7 @@ Respond ONLY with valid JSON in this exact structure, no markdown fences, no ext
 
 function renderCard(id, p, label) {
   const el = document.getElementById(id);
+  if (!el) return; // safety: element not found
   if (!p) { el.innerHTML = '<p style="color:var(--muted);font-size:0.8rem">No data available.</p>'; return; }
   el.innerHTML = `
     <div class="perspective-tag">${label}</div>
